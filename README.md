@@ -3,11 +3,11 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: If two boxes in the same unit have the same two value candidates and only those two (naked twins), then no other box in the same unit could be one of the two values. Therefore we can emliminate those two values from all boxes except the naked twins.
+A: If two boxes in the same unit have the same two value candidates and only those two (naked twins), then no other box in the same unit could be one of the two values. Therefore we can emliminate those two values from all boxes except the naked twins. This therefore is a strategy which can help in situation where all other strategies fail or would take much iterations.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: In this case the two diagonal units also have to have alle values from one to nine as all other units. We can use all existing strategies (elimination, only choice...) if we just add the diagonals to the units and peers.
+A: In this case the two diagonal units also have to have alle values from one to nine as all other units. We can use all existing strategies (elimination, only choice...) if we just add the diagonals to the units and peers. Implementing those constraints leads to more exclusions from the known boxes for all strategies and therefore to faster convergence.
 
 ### Install
 

@@ -1,3 +1,5 @@
+import logging
+logging.error('vorsehn')
 assignments = []
 
 rows = 'ABCDEFGHI'
@@ -7,15 +9,22 @@ def cross(A, B):
     "Cross product of elements in A and elements in B."
     return [s+t for s in A for t in B]
 
-
+# Define boxes of a sudoku
 boxes = cross(rows, cols)
+# Define row units of a sudoku
 row_units = [cross(r, cols) for r in rows]
+# Define column units of a sudoku
 column_units = [cross(rows, c) for c in cols]
+# Define square units of a sudoku
 square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
-diagonal_units = [['A1','B2','C3','D4','E5','F6','G7','H8','I9'],['A9','B8','C7','D6','E5','F4','G3','H2','I1']]
- 
+# Define diagonal units of a sudoku
+#diagonal_units = [['A1','B2','C3','D4','E5','F6','G7','H8','I9'],['A9','B8','C7','D6','E5','F4','G3','H2','I1']]
+diagonal_units = [[r+c for r,c in zip(rows,cols)], [r+c for r,c in zip(rows,cols[::-1])]]
+# Create a list of all units of a sudoku
 unitlist = row_units + column_units + square_units + diagonal_units
+# Create a dictionary of units of each box
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
+# Create a dictionary of peers of each box
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
    
 
@@ -46,16 +55,23 @@ def naked_twins(values):
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
     for unit in unitlist:
-        double = []
+        # create empty list for naked_twins       
+        twins = []
+        #Iterate over each box (field) in one unit
         for box in unit:
+            #check number of possible numbers in box
             le = len(values[box])
             if le == 2:
-                if values[box] in [values[b] for b in unit if b != box]:
-                    double.append(box)
-        if len(double) > 1:
-            for _ in str(values[double[0]]):
-                for box in [b for b in unit if b not in double]:
-                    values[box] = values[box].replace(_,'')
+                # Check if the value in one box matches the value of another box in the same unit
+                if values[box] in [values[i_box] for i_box in unit if i_box != box]:
+                    twins.append(box)
+        #if twins found in a unit..
+        if len(twins) > 1:
+            # for every single number possible in the "twin boxes"
+            for single_number in str(values[twins[0]]):
+                # replace those numbers in boxes which don#t belong to the twins
+                for box in [i_box for i_box in unit if i_box not in twins]:
+                    values[box] = values[box].replace(single_number,'')
     return values
 
 
